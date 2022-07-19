@@ -7,6 +7,15 @@ namespace DistinctAssigning
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
+
+        public void SetDistinctProperty<T>(Func<Person, T> propertyName, IEnumerable<Person> people)
+        {
+            T distinctPropertyValues = people.Select(propertyName).Distinct();
+            if (distinctPropertyValues.Count() == 1)
+            {
+                // FirstName or LastName or Age = distinctPropertyValues.Single();
+            }
+        }
     }
 
     class Tests
@@ -22,6 +31,7 @@ namespace DistinctAssigning
 
             var someone = new Person();
 
+            // similar code
             var distinctFirstNames = people.Select(person => person.FirstName).Distinct();
             if (distinctFirstNames.Count() == 1)
             {
@@ -39,6 +49,12 @@ namespace DistinctAssigning
             {
                 someone.Age = distinctAges.Single();
             }
+
+            // I would like to replace the code above with the code below,
+            // but I don't know how to write the method that does it
+            someone.SetDistinctProperty(person => person.FirstName, people);
+            someone.SetDistinctProperty(person => person.LastName, people);
+            someone.SetDistinctProperty(person => person.Age, people);
 
             Assert.That(someone.FirstName, Is.EqualTo("John"));
             Assert.That(someone.LastName, Is.EqualTo(null));
